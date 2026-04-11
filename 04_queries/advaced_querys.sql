@@ -179,7 +179,8 @@ with base as (
             order by sum(v.ventas) DESC
         ) as ranking,
             count(ventas) as number_sales,
-        SUM(sum(v.ventas)) OVER( PARTITION BY f.anyo) as total_year_sales
+        SUM(sum(v.ventas)) OVER( 
+            PARTITION BY f.anyo) as total_year_sales
     FROM
         h_ventas v
 
@@ -275,3 +276,41 @@ ORDER BY net_sales DESC;
         
 
 -- 13. Top 3 países por ventas netas por año.
+WITH base AS (
+    SELECT
+        f.anyo,
+        p.desc_pais,
+        v.ventas,
+        CAST(REPLACE(REPLACE(v.descuento, ',','.'), '%', '') AS DECIMAL (5,4)) AS descuento_clean,
+        
+        ROW_NUMBER()OVER(
+            PARTITION BY f.anyo
+            ORDER BY SUM(v.ventas) DESC )AS ranking
+        
+    FROM
+        h_ventas_edit v
+    INNER JOIN d_pais p
+        ON V.id_pais = P.id_pais
+    LEFT JOIN d_fecha f
+    ON v.id_fecha = f.id_fecha
+
+
+),
+aggregated AS(
+    SELECT
+        desc_pais,
+        SUM(v.ventas)                   AS total_sales,
+        (ventas * descuento_clean)      AS net_sales
+    FROM
+        base
+
+    GROUP BY desc_pais
+)
+
+SELECT 
+    anyo,
+    desc_pais,
+    total_sales - net_sales     AS total_net_sales,
+    ranking
+FROM aggregated
+WHERE ranking <=3;
