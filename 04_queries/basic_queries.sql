@@ -28,6 +28,8 @@ ALTER TABLE personas
 ADD antiguedad_mes INT DEFAULT NULL;
 
 -- Modificar una columna de una tabla (nombre VARCHAR(50)).
+SELECT *
+FROM h_ventas;
 
 -- Eliminar una columna de una tabla (antiguedad_mes).
 
