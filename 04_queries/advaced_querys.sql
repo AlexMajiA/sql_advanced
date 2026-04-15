@@ -281,11 +281,7 @@ WITH base AS (
         f.anyo,
         p.desc_pais,
         v.ventas,
-        CAST(REPLACE(REPLACE(v.descuento, ',','.'), '%', '') AS DECIMAL (5,4)) AS descuento_clean,
-        
-        ROW_NUMBER()OVER(
-            PARTITION BY f.anyo
-            ORDER BY SUM(v.ventas) DESC )AS ranking
+        CAST(REPLACE(REPLACE(v.descuento, ',','.'), '%', '') AS DECIMAL (5,4)) AS descuento_clean
         
     FROM
         h_ventas_edit v
@@ -294,23 +290,30 @@ WITH base AS (
     LEFT JOIN d_fecha f
     ON v.id_fecha = f.id_fecha
 
-
 ),
 aggregated AS(
     SELECT
+        anyo,
         desc_pais,
-        SUM(v.ventas)                   AS total_sales,
-        (ventas * descuento_clean)      AS net_sales
+        SUM(ventas)                     AS total_sales,
+        SUM(ventas * descuento_clean)   AS total_discount,
+
+        ROW_NUMBER()OVER(
+            PARTITION BY anyo
+            ORDER BY SUM(ventas) - SUM(ventas * descuento_clean) DESC ) AS ranking
     FROM
         base
 
-    GROUP BY desc_pais
+    GROUP BY anyo, desc_pais
 )
 
 SELECT 
     anyo,
     desc_pais,
-    total_sales - net_sales     AS total_net_sales,
+    total_sales - total_discount     AS total_net_sales,
     ranking
 FROM aggregated
 WHERE ranking <=3;
+
+
+-- 14. porcentaje de ventas por país dentro de cada año (window functions)
