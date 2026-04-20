@@ -353,7 +353,6 @@ aggregated as (
 )
 
 SELECT 
-
     anyo,
     desc_pais,
     total_sales,
