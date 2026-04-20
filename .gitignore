@@ -11,3 +11,6 @@ sqltools*.json
 # OS files
 .DS_Store
 Thumbs.db
+
+#Folder
+/images/
