@@ -317,3 +317,49 @@ WHERE ranking <=3;
 
 
 -- 14. porcentaje de ventas por país dentro de cada año (window functions)
+WITH base AS (
+    SELECT
+        p.desc_pais,
+        v.ventas,
+        f.anyo,
+        CAST(REPLACE(REPLACE(v.descuento, ',','.'), '%', '') AS DECIMAL (5,4)) AS descuento_clean
+    FROM
+        h_ventas_edit v
+
+    INNER JOIN d_fecha f
+        ON v.id_fecha = f.id_fecha
+    INNER JOIN d_pais p
+        ON v.id_pais = p.id_pais
+
+), 
+
+aggregated as (
+    SELECT
+        anyo,
+        desc_pais,
+        SUM(ventas) AS total_sales,
+        SUM(SUM(ventas)) OVER (PARTITION BY anyo) AS total_year_sales,
+
+        ROW_NUMBER() OVER(
+            PARTITION BY anyo
+            ORDER BY SUM(ventas) DESC 
+            ) AS ranking
+
+    FROM
+        base
+
+    GROUP BY anyo, desc_pais
+
+)
+
+SELECT 
+
+    anyo,
+    desc_pais,
+    total_sales,
+    total_year_sales,
+    total_sales / total_year_sales AS percentage,
+    ranking
+
+FROM aggregated
+ORDER BY anyo, ranking;
