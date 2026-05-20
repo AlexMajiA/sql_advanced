@@ -289,10 +289,6 @@ WITH base AS (
         ON V.id_pais = P.id_pais
     LEFT JOIN d_fecha f
     ON v.id_fecha = f.id_fecha
-<<<<<<< HEAD
-
-=======
->>>>>>> 6b4f6e2 (cambios locales mac)
 ),
 
 aggregated AS(
@@ -304,13 +300,8 @@ aggregated AS(
 
         ROW_NUMBER()OVER(
             PARTITION BY anyo
-<<<<<<< HEAD
-            ORDER BY SUM(ventas) - SUM(ventas * descuento_clean) DESC ) AS ranking
-    FROM
-=======
             ORDER BY SUM(ventas) - SUM(ventas * descuento_clean) DESC) AS ranking
     FROM    
->>>>>>> 6b4f6e2 (cambios locales mac)
         base
 
     GROUP BY anyo, desc_pais
@@ -319,11 +310,7 @@ aggregated AS(
 SELECT 
     anyo,
     desc_pais,
-<<<<<<< HEAD
-    total_sales - total_discount     AS total_net_sales,
-=======
     total_sales - total_discount        AS net_sales,
->>>>>>> 6b4f6e2 (cambios locales mac)
     ranking
 FROM aggregated
 WHERE ranking <=3;
