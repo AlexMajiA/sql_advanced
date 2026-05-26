@@ -34,6 +34,8 @@
 
     SELECT * FROM personas;
 
+    TRUNCATE TABLE personas;
+
 -- 3. Crear una tabla a partir de otra ya existente. Se especifica el nombre de la tabla y la query con la información especifica.
     CREATE TABLE personas2 AS
     SELECT * FROM personas;
@@ -98,12 +100,22 @@
         OR nombre = 'Pedro';
 
 -- 14. Obtener los empleados cuyo nombre no sea Antonio.
-
+    SELECT *
+    FROM personas
+    WHERE nombre <> 'Antonio'
  
 
 -- 15. Obtener los empleados cuyo nombre empiece por la letra A.
+    SELECT *
+    FROM personas
+    WHERE nombre LIKE 'A%'
+
 
 -- 16. Obtener los empleados cuyo primer apellido tenga cuatro letras y empiece por “Ru”.
+    SELECT
+    FROM personas
+
+
 
 -- 17. Obtener los empleados que pertenezcan al departamento 1 o 2.
 
