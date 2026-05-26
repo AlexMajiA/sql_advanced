@@ -112,14 +112,37 @@
 
 
 -- 16. Obtener los empleados cuyo primer apellido tenga cuatro letras y empiece por “Ru”.
-    SELECT
+    SELECT *
     FROM personas
-
-
+    WHERE 
+        apellido1 LIKE 'Ru%'
+    AND LENGTH(apellido1) = 4
 
 -- 17. Obtener los empleados que pertenezcan al departamento 1 o 2.
+    SELECT *
+    FROM personas
+    WHERE id_dep = 1 
+        OR id_dep = 2
 
--- 18. Obtener los empleados cuyo nombre esté incluido en la tabla personas_luxemburgo.
+-- 18. Obtener los empleados cuyo nombre esté incluido en la tabla personas2.
+    TRUNCATE TABLE personas2;
+
+    INSERT INTO personas2 (id_per, nombre, apellido1, apellido2, id_dep, salario)
+    VALUES
+    (101, 'Antonio', 'Pérez', 'Gómez', 1, 30000),
+    (102, 'Lucía', 'Martín', 'Sánchez', 2, 24500),
+    (103, 'Pedro', 'Ruiz', 'González', 2, 26000),
+    (104, 'Raquel', 'García', 'López', 1, 28000),
+    (105, 'Rubén', 'Santos', 'Díaz', 3, 31000),
+    (106, 'Elena', 'Navarro', 'Díaz', 4, 37000),
+    (107, 'Iván', 'Moreno', 'Castro', 3, 29000),
+    (108, 'Sara', 'Ortega', 'Molina', 2, 31500),
+    (109, 'Noelia', 'Gil', 'Morales', 1, 27000),
+    (110, 'Adrián', 'Serrano', 'Vega', 4, 45000);
+
+
+    SELECT *
+    FROM personas2
 
 -- 19. Mostrar todos los registros de la tabla personas.
 
